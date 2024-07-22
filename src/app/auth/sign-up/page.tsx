@@ -1,3 +1,5 @@
+"use client";
+
 import LogoComponent from "@/app/components/common/logo";
 import React from "react";
 import AuthFormLayout from "../components/authFormLayout";

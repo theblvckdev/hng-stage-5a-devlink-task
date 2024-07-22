@@ -1,10 +1,13 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 interface AuthInputFieldsProperties {
   type: string;
   value?: string;
   errorMessage?: string;
+  name: string;
   required?: boolean;
   placeholder?: string;
   onchange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -41,25 +44,33 @@ const AuthInputFields = ({
   placeholder,
   type,
   value,
+  name,
   required,
   errorMessage,
 }: AuthInputFieldsProperties) => {
+  const [activeInput, setActiveInput] = useState<boolean>(false);
+
   return (
     <>
       <div
-        className={`flex gap-[12px] relative flex-row duration-300 ease-in items-center py-3 px-4 rounded-lg bg-transparent ring-1 font-instrumentSans ${
+        className={`flex gap-[12px] bg-white relative flex-row duration-300 ease-in items-center py-3 px-4 rounded-lg bg-transparent ring-1 font-instrumentSans ${
           required ? "ring-error" : "ring-border"
-        } text-base leading-6 text-darkGray w-full`}
+        } ${
+          activeInput && "shadow-spread shadow-[#633CFF40] ring-primary"
+        } w-full`}
       >
         {type === "email" && <MailIcon />}
         {type === "password" && <LockIcon />}
 
         <input
+          name={name}
           type={type}
           value={value}
+          onFocus={() => setActiveInput(true)}
+          onBlur={() => setActiveInput(false)}
           onChange={onchange}
           placeholder={placeholder}
-          className="outline-none box-border w-full"
+          className="outline-none box-border w-full text-base leading-6 text-darkGray"
         />
 
         {required && (

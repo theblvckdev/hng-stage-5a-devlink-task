@@ -24,6 +24,9 @@ const config: Config = {
       boxShadow: {
         customeShadow:
           "0 0px 20px rgba(145, 143, 143, 0.1), 0 1px 0px rgba(0, 0, 0, 0.06)",
+
+        spread:
+          "0 0px 20px rgba(145, 143, 143, 0.1), 0 1px 0px rgba(0, 0, 0, 0.06)",
       },
     },
   },
