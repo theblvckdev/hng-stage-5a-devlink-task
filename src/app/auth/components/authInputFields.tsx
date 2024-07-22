@@ -65,6 +65,7 @@ const AuthInputFields = ({
         <input
           name={name}
           type={type}
+          required={required}
           value={value}
           onFocus={() => setActiveInput(true)}
           onBlur={() => setActiveInput(false)}

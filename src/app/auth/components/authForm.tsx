@@ -10,16 +10,14 @@ interface AuthFormProperties {
 }
 
 interface FormState {
-  [key: string]: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
 const AuthForm = ({ isLogin }: AuthFormProperties) => {
   const [formState, setFormState] = useState<FormState>({});
-  const [emailRequired, setEmailRequired] = useState<boolean>(false);
-  const [passwordRequired, setPasswordRequired] = useState<boolean>(false);
-  const [confirmPasswordRequired, setConfirmPasswordRequired] =
-    useState<boolean>(false);
-  const [passwordNotMatch, setPasswordNotMatch] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<FormState>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
@@ -27,162 +25,133 @@ const AuthForm = ({ isLogin }: AuthFormProperties) => {
       ...prevState,
       [name]: value,
     }));
+    setValidationErrors((prevState) => ({
+      ...prevState,
+      [name]: "",
+    }));
   };
 
-  useEffect(() => {
-    const updataInputRequiredState = () => {
-      if (formState.email) setEmailRequired(false);
-      if (formState.password) setPasswordRequired(false);
-      if (formState.confirmPassword) setConfirmPasswordRequired(false);
-    };
-
-    updataInputRequiredState();
-  }, [formState]);
-
-  //handle login logic
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateForm = (): boolean => {
+    const errors: FormState = {};
+    if (!formState.email) errors.email = "Can't be empty";
+    if (!formState.password) errors.password = "Can't be empty";
+    if (!isLogin && !formState.confirmPassword)
+      errors.confirmPassword = "Can't be empty";
+    if (formState.password !== formState.confirmPassword)
+      errors.confirmPassword = "Please check again";
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  // create accoutn login
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // check email is not empty
-    if (!formState.email) {
-      setEmailRequired(true);
-      return;
+    if (validateForm()) {
+      if (isLogin) {
+        handleLogin();
+      } else {
+        handleSignUp();
+      }
     }
+  };
 
-    // check password is not empty
-    if (!formState.password) {
-      setPasswordRequired(true);
-      return;
-    }
+  const handleLogin = () => {
+    // Implement login logic
+  };
 
-    // check confirm password is not empty
-    if (!formState.confirmPassword) {
-      setConfirmPasswordRequired(true);
-      return;
-    }
-
-    // validate password - check that confirm password is same as password
-    if (formState.confirmPassword !== formState.password)
-      return setPasswordNotMatch(true);
-
-    setPasswordNotMatch(false);
-
+  const handleSignUp = () => {
+    // Implement signup logic
     console.log("Validation passed");
   };
 
   return (
-    <>
-      <form
-        onSubmit={isLogin ? handleLogin : handleSignUp}
-        className="flex flex-col space-y-5"
-      >
-        <div className="flex flex-col space-y-1">
-          <label
-            htmlFor="email"
-            className="text-sm leading-[18px] font-instrumentSans text-darkGray"
-          >
-            Email address
-          </label>
-          <AuthInputFields
-            type="email"
-            name="email"
-            placeholder="e.g alex@example.com"
-            required={emailRequired}
-            errorMessage={emailRequired ? `Can't be empty` : undefined}
-            value={formState.email || ""}
-            onchange={handleChange}
-          />
-        </div>
+    <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+      <div className="flex flex-col space-y-1">
+        <label
+          htmlFor="email"
+          className="text-sm leading-[18px] font-instrumentSans text-darkGray"
+        >
+          Email address
+        </label>
+        <AuthInputFields
+          type="email"
+          name="email"
+          placeholder="e.g alex@example.com"
+          required={validationErrors.email ? true : false}
+          errorMessage={validationErrors.email}
+          value={formState.email || ""}
+          onchange={handleChange}
+        />
+      </div>
 
-        <div className="flex flex-col space-y-1">
-          <label
-            htmlFor="email"
-            className="text-sm leading-[18px] font-instrumentSans text-darkGray"
-          >
-            Create password
-          </label>
-          <AuthInputFields
-            type="password"
-            placeholder={
-              isLogin ? "Enter your password" : "At least 8 characters"
-            }
-            name="password"
-            required={
-              passwordRequired ? true : passwordNotMatch ? true : undefined
-            }
-            errorMessage={
-              passwordRequired
-                ? `Can't be empty`
-                : passwordNotMatch
-                ? "Please check again"
-                : undefined
-            }
-            value={formState.password || ""}
-            onchange={handleChange}
-          />
-        </div>
+      <div className="flex flex-col space-y-1">
+        <label
+          htmlFor="password"
+          className="text-sm leading-[18px] font-instrumentSans text-darkGray"
+        >
+          {isLogin ? "Enter your password" : "Create password"}
+        </label>
+        <AuthInputFields
+          type="password"
+          name="password"
+          placeholder={
+            isLogin ? "Enter your password" : "At least 8 characters"
+          }
+          required={validationErrors.password ? true : false}
+          errorMessage={validationErrors.password}
+          value={formState.password || ""}
+          onchange={handleChange}
+        />
+      </div>
 
-        {!isLogin && (
+      {!isLogin && (
+        <>
           <div className="flex flex-col space-y-1">
             <label
-              htmlFor="email"
+              htmlFor="confirmPassword"
               className="text-sm leading-[18px] font-instrumentSans text-darkGray"
             >
               Confirm password
             </label>
             <AuthInputFields
-              name="confirmPassword"
               type="password"
+              name="confirmPassword"
               placeholder="At least 8 characters"
-              required={confirmPasswordRequired}
-              errorMessage={
-                confirmPasswordRequired ? `Can't be empty` : undefined
-              }
+              required={validationErrors.confirmPassword ? true : false}
+              errorMessage={validationErrors.confirmPassword}
               value={formState.confirmPassword || ""}
               onchange={handleChange}
             />
           </div>
-        )}
-
-        {!isLogin && (
           <div className="text-sm text-customGray leading-[18px] font-instrumentSans">
-            Password must contail at least 8 characters
+            Password must contain at least 8 characters
           </div>
+        </>
+      )}
+
+      <div>
+        <CustomButton variant="primary" disabled={false} width="w-full">
+          {isLogin ? "Login" : "Create new account"}
+        </CustomButton>
+      </div>
+
+      <div className="w-fit mx-auto text-base text-center leading-[24px] text-customGray font-instrumentSans">
+        {isLogin ? (
+          <>
+            Don&apos;t have an account?{" "}
+            <Link href="/auth/sign-up" className="no-underline text-primary">
+              Create account
+            </Link>
+          </>
+        ) : (
+          <>
+            Already have an account?{" "}
+            <Link href="/auth/login" className="no-underline text-primary">
+              Login
+            </Link>
+          </>
         )}
-
-        <div>
-          <CustomButton variant="primary" disabled={false} width="w-full">
-            {isLogin ? "Login" : "Create new account"}
-          </CustomButton>
-        </div>
-
-        <div className="w-fit mx-auto text-base text-center leading-[24px] text-customGray font-instrumentSans">
-          {isLogin ? (
-            <>
-              Don&apos;t have an account?{" "}
-              <Link
-                href={"/auth/sign-up"}
-                className="no-underline text-primary"
-              >
-                Create account
-              </Link>
-            </>
-          ) : (
-            <>
-              Already have an account?{" "}
-              <Link href={"/auth/login"} className="no-underline text-primary">
-                Login
-              </Link>
-            </>
-          )}
-        </div>
-      </form>
-    </>
+      </div>
+    </form>
   );
 };
 
