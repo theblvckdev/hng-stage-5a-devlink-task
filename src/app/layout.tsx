@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${instrumentSans.className} overflow-x-hidden`}>
+      <body className={`${instrumentSans.className} md:overflow-x-hidden`}>
         {children}
       </body>
     </html>

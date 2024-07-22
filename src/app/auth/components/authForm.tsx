@@ -137,14 +137,14 @@ const AuthForm = ({ isLogin }: AuthFormProperties) => {
       <div className="w-fit mx-auto text-base text-center leading-[24px] text-customGray font-instrumentSans">
         {isLogin ? (
           <>
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account? <br className="md:hidden block" />
             <Link href="/auth/sign-up" className="no-underline text-primary">
               Create account
             </Link>
           </>
         ) : (
           <>
-            Already have an account?{" "}
+            Already have an account? <br className="md:hidden block" />
             <Link href="/auth/login" className="no-underline text-primary">
               Login
             </Link>
