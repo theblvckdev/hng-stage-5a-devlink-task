@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         customGray: "#888888",
         background: "#FAFAFA",
+        defaultGray: "#EEEEEE",
         border: "#D9D9D9",
         darkGray: "#333333",
         error: "#FF3939",

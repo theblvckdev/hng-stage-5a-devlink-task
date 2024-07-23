@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import AuthInputFields from "./authInputFields";
-import CustomButton from "@/app/components/ui/button/button";
 import Link from "next/link";
+import CustomButton from "@/components/ui/button/button";
 
 interface AuthFormProperties {
   isLogin: boolean;
