@@ -16,7 +16,7 @@ const DefaulLinkBlock = () => {
 const PreviewSection = () => {
   return (
     <>
-      <div className="w-full h-full p-16 flex items-center justify-center bg-white rounded-xl">
+      <div className="w-full h-full flex items-center justify-center bg-white rounded-xl">
         <div className="w-[400px] h-[600px] relative">
           <Image
             src="/media/svgs/mobile-preview.svg"

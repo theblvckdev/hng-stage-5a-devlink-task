@@ -4,6 +4,10 @@ import React, { useEffect, useState } from "react";
 import AuthInputFields from "./authInputFields";
 import Link from "next/link";
 import CustomButton from "@/components/ui/button/button";
+import { useRouter } from "next/navigation";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { app } from "@/app/firebase/config";
+import { getAuth } from "firebase/auth";
 
 interface AuthFormProperties {
   isLogin: boolean;
@@ -18,6 +22,14 @@ interface FormState {
 const AuthForm = ({ isLogin }: AuthFormProperties) => {
   const [formState, setFormState] = useState<FormState>({});
   const [validationErrors, setValidationErrors] = useState<FormState>({});
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // firebase auth
+  const auth = getAuth(app);
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+
+  // const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
@@ -58,9 +70,23 @@ const AuthForm = ({ isLogin }: AuthFormProperties) => {
     // Implement login logic
   };
 
-  const handleSignUp = () => {
-    // Implement signup logic
-    console.log("Validation passed");
+  const handleSignUp = async () => {
+    setLoading(true);
+
+    try {
+      // Implement signup logic
+      const res = await signInWithEmailAndPassword(
+        formState.email!,
+        formState.password!
+      );
+      console.log(res);
+      sessionStorage.setItem("user", "true");
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
