@@ -5,9 +5,8 @@ import AuthInputFields from "./authInputFields";
 import Link from "next/link";
 import CustomButton from "@/components/ui/button/button";
 import { useRouter } from "next/navigation";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { app } from "@/app/firebase/config";
-import { getAuth } from "firebase/auth";
+import { account, ID } from "@/lib/appwrite";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AuthFormProperties {
   isLogin: boolean;
@@ -24,11 +23,8 @@ const AuthForm = ({ isLogin }: AuthFormProperties) => {
   const [validationErrors, setValidationErrors] = useState<FormState>({});
   const [loading, setLoading] = useState<boolean>(false);
 
-  // firebase auth
-  const auth = getAuth(app);
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const { login } = useAuth();
 
-  // const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -66,8 +62,27 @@ const AuthForm = ({ isLogin }: AuthFormProperties) => {
     }
   };
 
-  const handleLogin = () => {
-    // Implement login logic
+  // clear input fields
+  const clearInputs = (): void => {
+    setFormState({});
+  };
+
+  const handleLogin = async () => {
+    setLoading(true);
+
+    try {
+      // Implement login logic
+      const userData = {
+        email: formState.email!,
+        password: formState.password!,
+      };
+      login(userData);
+      clearInputs();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignUp = async () => {
@@ -75,13 +90,10 @@ const AuthForm = ({ isLogin }: AuthFormProperties) => {
 
     try {
       // Implement signup logic
-      const res = await signInWithEmailAndPassword(
-        formState.email!,
-        formState.password!
-      );
-      console.log(res);
-      sessionStorage.setItem("user", "true");
-      router.push("/");
+      await account.create(ID.unique(), formState.email!, formState.password!);
+      await handleLogin();
+      clearInputs();
+      router.push("/links");
     } catch (error) {
       console.error(error);
     } finally {
@@ -155,7 +167,7 @@ const AuthForm = ({ isLogin }: AuthFormProperties) => {
       )}
 
       <div>
-        <CustomButton variant="primary" disabled={false} width="w-full">
+        <CustomButton variant="primary" disabled={loading} width="w-full">
           {isLogin ? "Login" : "Create new account"}
         </CustomButton>
       </div>

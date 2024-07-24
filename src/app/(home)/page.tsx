@@ -1,12 +1,11 @@
 "use client";
-import { TabProvider } from "@/context/tabContext";
 import React from "react";
-import LinkTab from "./linkTab/page";
+import LinkTab from "./links/page";
 
 const Home = () => {
   return (
     <>
-      <LinkTab />
+      <h1>Not found</h1>
     </>
   );
 };

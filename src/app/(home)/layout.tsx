@@ -10,10 +10,10 @@ export default function HomeLayout({
       <Navbar />
 
       <div className="lg:flex lg:flex-row lg:gap-4 md:mt-4 md:p-0 p-4">
-        <div className="basis-2/5 lg:block hidden">
+        <div className="xl:basis-2/5 xl:block hidden">
           <PreviewSection />
         </div>
-        <div className="lg:basis-3/5">{children}</div>
+        <div className="xl:basis-3/5 lg:basis-1/2">{children}</div>
       </div>
     </main>
   );
