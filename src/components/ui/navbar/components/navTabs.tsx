@@ -11,13 +11,13 @@ const NavbTabs = ({
   return (
     <>
       {active && (
-        <button className="py-[11px] px-[24px] rounded-[8px] outline-none flex items-center gap-[8px] bg-lightPurple text-primary duration-300 ease-in font-instrumentSans font-semibold text-base leading-[24px]">
+        <button className="py-2.5 px-6 rounded-lg outline-none flex items-center gap-2 bg-lightPurple text-primary duration-300 ease-in font-instrumentSans font-semibold text-sm leading-6">
           {children}
         </button>
       )}
 
       {!active && (
-        <button className="py-[11px] px-[24px] rounded-[8px] outline-none flex items-center gap-[8px] text-customGray duration-300 ease-in font-instrumentSans font-semibold text-base leading-[24px] hover:text-primary">
+        <button className="py-2.5 px-6 rounded-lg outline-none flex items-center gap-2 bg-transparent text-customGray hover:text-primary duration-300 ease-in font-instrumentSans font-semibold text-sm leading-6">
           {children}
         </button>
       )}

@@ -1,15 +1,13 @@
 "use client";
 import { TabProvider } from "@/context/tabContext";
 import React from "react";
-import LinkTab from "./components/linkTab";
+import LinkTab from "./linkTab/page";
 
 const Home = () => {
   return (
-    <TabProvider>
-      <div className="mt-[24px]">
-        <LinkTab />
-      </div>
-    </TabProvider>
+    <>
+      <LinkTab />
+    </>
   );
 };
 

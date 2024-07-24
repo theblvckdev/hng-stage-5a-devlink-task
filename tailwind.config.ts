@@ -18,6 +18,7 @@ const config: Config = {
         primary: "#633CFF",
         primaryHover: "#BEADFF",
         lightPurple: "#EFEBFF",
+        lightGray: "#FAFAFA",
       },
       fontFamily: {
         instrumentSans: ["Instrument Sans", "sans-serif"],
